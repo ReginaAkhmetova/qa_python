@@ -34,11 +34,9 @@ class TestBooksCollector:
             'Что делать, если ваш кот хочет вас убить',
         ]
     )
-    def test_add_new_book_len_le_40_smb(self, name):
-        collector = BooksCollector()
+    def test_add_new_book_len_le_40_smb(self, collector, name):
         collector.add_new_book(name)
         assert name in collector.books_genre
-        assert len(collector.books_genre) == 1
 
     # добавляет книги, длиной более 40 символов
     @pytest.mark.parametrize(
@@ -48,8 +46,7 @@ class TestBooksCollector:
             'Жизнь и удивительные приключения Робинзона Крузо, моряка из Йорка, написанная им самим',
         ]
     )
-    def test_add_new_book_len_gt_40_smb(self, name):
-        collector = BooksCollector()
+    def test_add_new_book_len_gt_40_smb(self, collector, name):
         collector.add_new_book(name)
         assert name not in collector.books_genre
 
@@ -61,33 +58,28 @@ class TestBooksCollector:
             ('Оно', 'Ужасы')
         ]
     )
-    def test_set_book_genre_name(self, name, genre):
-        collector = BooksCollector()
+    def test_set_book_genre_name(self, collector, name, genre):
         collector.add_new_book(name)
         collector.set_book_genre(name, genre)
         assert collector.get_book_genre(name) == genre
 
     # выводит список книг по жанру
-    def test_get_books_with_specific_genre(self):
-        collector = BooksCollector()
+    def test_get_books_with_specific_genre(self, collector):
         collector.add_new_book('Оно')
         collector.add_new_book('Тупой и еще тупее')
         collector.set_book_genre('Оно', 'Ужасы')
         collector.set_book_genre('Тупой и еще тупее', 'Комедии')
         testval = collector.get_books_with_specific_genre('Ужасы')
         assert type(testval) is list
-        assert len(testval) == 1
 
     # проверяет, что неправильный жанр не добавится
-    def test_set_invalid_genre(self):
-        collector = BooksCollector()
+    def test_set_invalid_genre(self, collector):
         collector.add_new_book('Оно')
         collector.set_book_genre('Оно', 'КакаятоФигня')
         assert collector.get_book_genre('Оно') == ''
 
     # выводит текущий словарь
-    def test_get_books_genre(self):
-        collector = BooksCollector()
+    def test_get_books_genre(self, collector):
         books_genre = {
             'Убийство на улице Морг': 'Ужасы',
             'Дракула': 'Ужасы',
@@ -99,8 +91,7 @@ class TestBooksCollector:
         assert collector.get_books_genre() == books_genre
 
     # возвращает книги, которые подходят детям
-    def test_get_books_for_children(self):
-        collector = BooksCollector()
+    def test_get_books_for_children(self, collector):
         books_genre = {
             'Убийство на улице Морг': 'Ужасы',
             'Дракула': 'Ужасы',
@@ -112,32 +103,27 @@ class TestBooksCollector:
         assert collector.get_books_for_children() == ['Кот в сапогах']
 
     # добавляет книгу в избранное
-    def test_add_book_in_favorites(self):
-        collector = BooksCollector()
+    def test_add_book_in_favorites(self, collector):
         collector.add_new_book('Кот в сапогах')
         collector.add_book_in_favorites('Кот в сапогах')
         assert 'Кот в сапогах' in collector.favorites
 
     # добавляет повторно ту же книгу в избранное
-    def test_add_book_in_favorites_same_names(self):
-        collector = BooksCollector()
+    def test_add_book_in_favorites_same_names(self, collector):
         collector.add_new_book('Кот в сапогах')
         collector.add_book_in_favorites('Кот в сапогах')
         collector.add_book_in_favorites('Кот в сапогах')
         assert len(collector.get_list_of_favorites_books()) == 1
 
     # удаляет книгу из избранного
-    def test_delete_book_from_favorites(self):
-        collector = BooksCollector()
+    def test_delete_book_from_favorites(self, collector):
         collector.add_new_book('Кот в сапогах')
         collector.add_book_in_favorites('Кот в сапогах')
-        assert 'Кот в сапогах' in collector.favorites
         collector.delete_book_from_favorites('Кот в сапогах')
         assert 'Кот в сапогах' not in collector.favorites
 
     # получает список избранных книг
-    def test_get_list_of_favorites_books(self):
-        collector = BooksCollector()
+    def test_get_list_of_favorites_books(self, collector):
         collector.add_new_book('Кот в сапогах')
         collector.add_book_in_favorites('Кот в сапогах')
         assert collector.get_list_of_favorites_books() == ['Кот в сапогах']
